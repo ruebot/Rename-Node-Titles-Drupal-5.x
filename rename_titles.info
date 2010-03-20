@@ -1,0 +1,4 @@
+; $Id: rename_titles.info,v 0.1 NR $
+name = Rename Titles for foo
+description = Renames all titles for foo Content Type
+package = Development

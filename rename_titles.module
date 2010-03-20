@@ -1,0 +1,45 @@
+<?php
+// ; $Id: rename_titles.info,v 0.1 NR $
+function rename_titles_menu($maycache) {
+  $items = array();
+
+  $items[] = array(
+    'path'               => 'admin/content/rename_titles',
+    'title'              => t('Rename Titles foo'),
+    'description'        => t('Renames all titles for foo Content Type'),
+    'callback'           => 'drupal_get_form',
+    'callback arguments' => array('rename_titles'),
+    'access'             => user_access('administer content'),
+    'type'               => MENU_NORMAL_ITEM);
+  return $items;
+}
+
+function rename_titles() {
+  $form['action'] = array(
+    '#type'  => 'hidden',
+    '#value' => 'categories',
+  );
+  return confirm_form(
+    $form,
+    t('Are you sure you want to rename all titles?'),
+    'admin',
+    t('Renames all titles for foo Content Type'),
+    t('rename'),
+    t('Cancel'),
+    'rename_titles');
+}
+
+function rename_titles_submit() {
+
+$result = db_query("SELECT nid FROM {node} where type='foo'");
+//find all nodes from content type foo
+
+while($nid = db_fetch_object($result)) {
+  $node = node_load($nid->nid);
+        auto_nodetitle_set_title($node);
+   node_save($node);
+}
+
+drupal_set_message(t('All foo titles have been renamed.'.$node->nid));
+drupal_goto('admin');
+}
